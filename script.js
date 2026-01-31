@@ -15,28 +15,52 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // ---------------------------
+// Utility: Show Error
+// ---------------------------
+function showError(msg) {
+  const box = document.getElementById("errorBox");
+  box.textContent = msg;
+  box.classList.remove("hidden");
+}
+
+// Utility: Clear Error
+function clearError() {
+  const box = document.getElementById("errorBox");
+  box.textContent = "";
+  box.classList.add("hidden");
+}
+
+// ---------------------------
 // Load Team Function
 // ---------------------------
 async function loadTeam() {
+  clearError();
   const code = document.getElementById("teamCodeInput").value.trim();
   const output = document.getElementById("output");
+  output.textContent = "";
 
+  // Empty input
   if (!code) {
-    output.textContent = "Enter a team code.";
+    showError("Please enter a team code.");
     return;
   }
 
   try {
-    const snap = await db.collection("teams").doc(code).get();
+    const docRef = db.collection("teams").doc(code);
+    const snap = await docRef.get();
 
+    // Invalid code
     if (!snap.exists) {
-      output.textContent = "Team not found.";
+      showError(`No team found with code "${code}".`);
       return;
     }
 
+    // Success
     output.textContent = JSON.stringify(snap.data(), null, 2);
+
   } catch (err) {
-    output.textContent = "Error loading team: " + err.message;
+    // Firestore or network error
+    showError("Failed to load team data. " + err.message);
   }
 }
 
@@ -44,3 +68,4 @@ async function loadTeam() {
 // Button Listener
 // ---------------------------
 document.getElementById("loadBtn").addEventListener("click", loadTeam);
+
