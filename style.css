@@ -35,4 +35,18 @@ pre {
   padding: 15px;
   border-radius: 5px;
   white-space: pre-wrap;
+  margin-top: 15px;
+}
+
+.error {
+  background: #ffdddd;
+  color: #a30000;
+  padding: 10px;
+  border-left: 4px solid #ff4d4d;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.hidden {
+  display: none;
 }
